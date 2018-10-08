@@ -44,7 +44,7 @@ def draw_binary_tree_edges(tree):
 				draw_binary_tree_edges(tree.get_right_subtree())
 
 def draw_binary_tree(tree, point_numbers, color_map):
-	draw_binary_tree_edges(tree)
+	#draw_binary_tree_edges(tree)
 	draw_binary_tree_points(tree, point_numbers, color_map)
 
 def draw_point_in_line(points, color_map, point_nuber_markers):

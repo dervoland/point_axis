@@ -101,7 +101,7 @@ class BSPTreeBuilder:
 		y_arr = Point.get_y(points)
 		return min(x_arr), max(x_arr), min(y_arr), max(y_arr)
 		
-	def split_points_by_condition(self, points, pred):
+	def split_points(self, points, pred):
 		left, right = [],[]
 		for p in points:
 			if pred(p):
@@ -112,15 +112,27 @@ class BSPTreeBuilder:
 		
 	def split_space_by_lager_gabarit_size(self, points):
 		x_min, x_max, y_min, y_max = self.calculate_gabarit(points)
-		if abs(x_max - x_min) > abs(y_max - y_min):
+		dx, dy = abs(x_max - x_min), abs(y_max - y_min)
+		assert(dx > 0 or dy > 0) # may be not unique points
+		if dx > dy:
 			x_mid = 0.5 * (x_max + x_min)
-			return self.split_points_by_x(points, (lambda p : p.x < x_mid))
+			return self.split_points(points, (lambda p : p.x < x_mid))
 		else:
 			y_mid = 0.5 * (y_max + y_min)
-			return self.split_points_by_x(points, (lambda p : p.y < y_mid))
-	
-	def make_tree_(self, points):
-		left, right = self.split_space_by_lager_gabarit_size(points)
+			return self.split_points(points, (lambda p : p.y < y_mid))
 	
 	def make_tree(self, points):
-		return None
+		if len(points) > 0:
+			if len(points) == 1:
+				return BinaryTree.make_leaf(points[0])
+			else:
+				left_points, right_points = self.split_space_by_lager_gabarit_size(points)
+				assert(len(left_points) > 0)
+				assert(len(right_points) > 0)
+				left_tree = self.make_tree(left_points)
+				right_tree = self.make_tree(right_points)
+				return BinaryTree.make_supertree(left_tree, right_tree)
+		else:
+			return None
+		
+			
