@@ -81,17 +81,19 @@ class DiscontinuityErrorCounter:
 		
 ####################################################
 def find_few_errors_point_permutation(points, error_counter):
-	min_errors = 0
+	min_errors = None
 	for point_placement in misc.permutations(points):
 		err_count = error_counter(point_placement)
-		if err_count < min_errors:
+		if (min_errors is None) or (err_count < min_errors):
 			min_errors = err_count
+	assert(min_errors is not None)
 	return min_errors
 
 def find_best_quality_point_permutation(points, quality_estimator):
-	best_score = sys.maxsize
+	best_score = None
 	for point_placement in misc.permutations(points):
 		score = quality_estimator(point_placement)
-		if score > best_score:
+		if (best_score is None) or (score > best_score):
 			best_score = score
+	assert(best_score is not None)
 	return best_score
